@@ -6,14 +6,12 @@
 library("tidyverse")
 # library("xml2")
 
-
 # # import EMu log ####
 # emu1 <- read.csv(dataEMu1, stringsAsFactors = F)
 # emu2 <- read.csv(dataEMu2, stringsAsFactors = F)
 
 
 # select only edits of Main OR Supplementary multimedia
-# emu2 <- unique(emu2[emu2$AudColumnName %in% c("Multimedia", "Supplementary_tab"), -1])  # emu-table mangles deleted values
 emu2 <- unique(emu2[grepl("^Multimedia|^Supplementary_tab", emu2$AudNewValue), -1])
 emu2 <- spread(emu2, key = "AudColumnName", value = "AudNewValue", fill = "")
 

@@ -60,32 +60,32 @@ scp_download(session,
 ##    - On Mon, get the Friday & Saturday filer logs (No Sunday filer log?)
 ##    - On Tue-Fri, get the previous day's logs
 
-# filerDF <- list.dirs("data/", pattern = "audit", full.names = T)
+# # filerDF <- list.dirs("data/", pattern = "audit", full.names = T)
+# # 
+
+# if (format(Sys.Date(), "%a") == "Mon") {
+#   for (i in 2:3) {
+#     # filerTMP <- read.csv(paste0(dfFiler[NROW(dfFiler)-i], "/",
+#     #                             list.files(dfFiler[NROW(dfFiler)-i], pattern = "audit")),
+#     #                      stringsAsFactors = F)
+#     # 
+#     # filerBU <- rbind(filerBU, filerTMP)
 # 
-
-if (format(Sys.Date(), "%a") == "Mon") {
-  for (i in 2:3) {
-    # filerTMP <- read.csv(paste0(dfFiler[NROW(dfFiler)-i], "/",
-    #                             list.files(dfFiler[NROW(dfFiler)-i], pattern = "audit")),
-    #                      stringsAsFactors = F)
-    # 
-    # filerBU <- rbind(filerBU, filerTMP)
-
-    filerDate <- gsub("-","",(Sys.Date()-i))
-    scp_download(session, 
-                 paste0(pathFiler, 
-                        filerDate),
-                 to = paste0(origdir,locFiler))
-  }
-  
-} else {
+#     filerDate <- gsub("-","",(Sys.Date()-i))
+#     scp_download(session, 
+#                  paste0(pathFiler, 
+#                         filerDate),
+#                  to = paste0(origdir,locFiler))
+#   }
+#   
+# } else {
   
   filerDate <- gsub("-","",(Sys.Date()-1))
   scp_download(session, 
                paste0(pathFiler, 
                       filerDate),
                to = paste0(origdir,locFiler))
-}
+# }
 
 Sys.sleep(2)
 
