@@ -2,7 +2,7 @@
 # 2018-10-19
 # FMNH-IT
 
-# Use 'Rscript mmValid.R' to run this from a bash shell.
+# Use 'Rscript mmValidate.R' to run this from a bash shell.
 
 # # getAudits <- readline("Do you need to get logs from server? Y/N")
 
