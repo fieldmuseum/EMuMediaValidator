@@ -19,23 +19,43 @@ timeEMu <- file.info(list.files(paste0(origdir, locEMu), full.names = T))
 # dfEMu <- list.dirs(paste(pathEMu), full.names = T)
 dfEMu <- list.dirs(paste0(origdir, locEMu), full.names = T)
 
-emu1 <- read.csv(paste0(dfEMu[NROW(dfEMu)], "/",
-                        list.files(dfEMu[NROW(dfEMu)], pattern = "eaudit")),
-                 # rownames(dfEMu)[which.max(dfEMu$ctime)],
-                 stringsAsFactors = F)
 
-emu2 <- read.csv(paste0(dfEMu[NROW(dfEMu)], "/",
-                        list.files(dfEMu[NROW(dfEMu)], pattern = "Group1")),
-                 # rownames(dfEMu)[which.max(dfEMu$ctime)],
-                 stringsAsFactors = F)
+if (!file.exists(paste0(dfEMu[NROW(dfEMu)], "/",
+                        list.files(dfEMu[NROW(dfEMu)], pattern = "eaudit")))) {
+  
+  print(paste("no EMu audit log for", filerDate))
+  write.table(print(paste("No EMu log for", filerDate)), 
+              file = paste0("EMuauditErrorlog_",filerDate,".txt"))
+  
+} else {
+  emu1 <- read.csv(paste0(dfEMu[NROW(dfEMu)], "/",
+                          list.files(dfEMu[NROW(dfEMu)], pattern = "eaudit")),
+                   # rownames(dfEMu)[which.max(dfEMu$ctime)],
+                   stringsAsFactors = F)
 
+  emu2 <- read.csv(paste0(dfEMu[NROW(dfEMu)], "/",
+                          list.files(dfEMu[NROW(dfEMu)], pattern = "Group1")),
+                   # rownames(dfEMu)[which.max(dfEMu$ctime)],
+                   stringsAsFactors = F)
+
+}
 
 # Get most recent Filer audit log with corresponding EMu log
 dfFiler <- list.dirs(paste0(origdir, locFiler), full.names = T)
 
-filerBU <- read.csv(paste0(dfFiler[NROW(dfFiler)], "/",
-                           list.files(dfFiler[NROW(dfFiler)], pattern = "audit")),
-                    stringsAsFactors = F)
+if (!file.exists(paste0(dfFiler[NROW(dfFiler)], "/",
+                        list.files(dfFiler[NROW(dfFiler)], pattern = "audit")))){
+  
+  print(paste("no filer audit log for", filerDate))
+  write.table(print(paste("No Filer log for", filerDate)), 
+              file = paste0("auditErrorlog_",filerDate,".txt"))
+  
+} else {
+
+    filerBU <- read.csv(paste0(dfFiler[NROW(dfFiler)], "/",
+                             list.files(dfFiler[NROW(dfFiler)], pattern = "audit")),
+                      stringsAsFactors = F)
+}
 
 # if (format(max(timeEMu$ctime), "%a") == "Mon") {
 #   # for (i in 2:3) {
