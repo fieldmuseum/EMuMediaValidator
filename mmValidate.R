@@ -14,7 +14,9 @@ source("008copyLogs.R", verbose = T)
 
 source("010openLogs.R", verbose = T)
 
-source("020compare.R", verbose = T)
+if (!file.exists(paste0("auditErrorlog_", filerDate))) {
+  source("020compare.R", verbose = T)
+}
 
 source("030cleanup.R", verbose = T)
 

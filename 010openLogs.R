@@ -20,8 +20,7 @@ timeEMu <- file.info(list.files(paste0(origdir, locEMu), full.names = T))
 dfEMu <- list.dirs(paste0(origdir, locEMu), full.names = T)
 
 
-if (!file.exists(paste0(dfEMu[NROW(dfEMu)], "/",
-                        list.files(dfEMu[NROW(dfEMu)], pattern = "eaudit")))) {
+if (NROW(list.dirs(paste0(origdir, locEMu))) < 2) {
   
   print(paste("no EMu audit log for", filerDate))
   write.table(print(paste("No EMu log for", filerDate)), 
@@ -43,8 +42,7 @@ if (!file.exists(paste0(dfEMu[NROW(dfEMu)], "/",
 # Get most recent Filer audit log with corresponding EMu log
 dfFiler <- list.dirs(paste0(origdir, locFiler), full.names = T)
 
-if (!file.exists(paste0(dfFiler[NROW(dfFiler)], "/",
-                        list.files(dfFiler[NROW(dfFiler)], pattern = "audit")))){
+if (!dir.exists(paste0(origdir, locFiler, filerDate))) {
   
   print(paste("no filer audit log for", filerDate))
   write.table(print(paste("No Filer log for", filerDate)), 

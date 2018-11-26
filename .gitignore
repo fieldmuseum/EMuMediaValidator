@@ -5,6 +5,7 @@
 .Rprofile
 .Renviron
 
+*.txt
 *.zip
 *.csv
 *.Rproj
