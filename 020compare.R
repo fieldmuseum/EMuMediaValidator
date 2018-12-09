@@ -1,15 +1,7 @@
 # Compare daily multimedia audit logs between EMu & filer01
-#
-# 2018-10-19
-#
 
-library("tidyverse")
-# library("xml2")
 
-# # import EMu log ####
-# emu1 <- read.csv(dataEMu1, stringsAsFactors = F)
-# emu2 <- read.csv(dataEMu2, stringsAsFactors = F)
-
+# Import EMu log ####
 
 # select only edits of Main OR Supplementary multimedia
 emu2 <- unique(emu2[grepl("^Multimedia|^Supplementary_tab", emu2$AudNewValue), -1])
@@ -21,8 +13,7 @@ emu <- merge(emu1, emu2,
              all.x = T)
 
 
-# # import Filer log ####
-# filerBU <- read.csv(dataFiler, stringsAsFactors = F)
+# Import Filer log ####
 
 # split "Delete"/"Create" edits
 filerDeleted <- filerBU[filerBU$category=="Delete",]
@@ -32,8 +23,7 @@ filer <- filerBU[grepl("File", filerBU$event.type)==T,
 
 filer <- unique(filer[order(filer$path.from, filer$event.type),])
 
-
-# # don't strip supplementary directories & files
+# uncomment next line to strip supplementary directories & files
 filerMain <- filer # [!grepl("/supplementary", filer$path.from),]
 
 
@@ -60,10 +50,10 @@ filerMain2 <- spread(filerMain2,
                       value = MulIdentifier)
 
 
-# Compare filer & EMu logs
+# Compare EMu & Filer logs ####
 compareLogs <- emu[!emu$AudKey %in% filerMain2$irn,]
 
-# This shouldn't be a thing:
+# This shouldn't be a thing (NROW should always == 0):
 compareLogs2 <- filerMain2[!filerMain2$irn %in% emu$AudKey,]
 
 # Counts of created & deleted files:
@@ -83,7 +73,8 @@ FilerRecap <- separate(FilerRecap, 1,
                        c("Where", "Action", "Count"), 
                        sep = "-")
 
-# write missing files to output
+
+# Output recap & missing files ####
 if(!dir.exists(Sys.getenv("OUT_DIR"))) {
   dir.create(Sys.getenv("OUT_DIR"))
 }

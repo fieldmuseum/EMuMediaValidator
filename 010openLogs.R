@@ -45,8 +45,22 @@ dfFiler <- list.dirs(paste0(origdir, locFiler), full.names = T)
 if (!dir.exists(paste0(origdir, locFiler, filerDate))) {
   
   print(paste("no filer audit log for", filerDate))
-  write.table(print(paste("No Filer log for", filerDate)), 
-              file = paste0("auditErrorlog_",filerDate,".txt"))
+  # write.table(print(paste("No Filer log for", filerDate)), 
+  #             file = paste0("auditErrorlog_",filerDate,".txt"))
+  filerBU <- data.frame("timestamp.UTC." = character(),        
+                        "category" =  character(),
+                        "event.type" =  character(),
+                        "path.from" =  character(),
+                        "new.path.to" = logical(),
+                        "user" = integer(),
+                        "group" = integer(),
+                        "sid" = integer(),
+                        "share.export.name" = logical(),
+                        "volume.type" =  character(),
+                        "client.IP" = logical(),
+                        "snapshot.timestamp.UTC." = logical(),
+                        "shared.link" = logical(),
+                        stringsAsFactors = F)
   
 } else {
 
@@ -55,12 +69,36 @@ if (!dir.exists(paste0(origdir, locFiler, filerDate))) {
                       stringsAsFactors = F)
 }
 
-# if (format(max(timeEMu$ctime), "%a") == "Mon") {
-#   # for (i in 2:3) {
-#     filerTMP <- read.csv(paste0(dfFiler[NROW(dfFiler)-2], "/",
-#                                 list.files(dfFiler[NROW(dfFiler)-2], pattern = "audit")),
-#                          stringsAsFactors = F)
-#     
-#     filerBU <- rbind(filerBU, filerTMP)
-#   # }
-# }
+
+# On Mondays, get Friday & Saturday logs, too
+if (format(max(timeEMu$ctime), "%a") == "Mon") {
+  for (i in 1:2) {
+    if (!dir.exists(paste0(origdir, locFiler, (as.numeric(filerDate) - i) ))) {
+      
+      print(paste("no filer audit log for", (filerDate - i)))
+      
+      filerTMP <- data.frame("timestamp.UTC." = character(),        
+                             "category" =  character(),
+                             "event.type" =  character(),
+                             "path.from" =  character(),
+                             "new.path.to" = logical(),
+                             "user" = integer(),
+                             "group" = integer(),
+                             "sid" = integer(),
+                             "share.export.name" = logical(),
+                             "volume.type" =  character(),
+                             "client.IP" = logical(),
+                             "snapshot.timestamp.UTC." = logical(),
+                             "shared.link" = logical(),
+                             stringsAsFactors = F)
+      
+    } else {
+      
+      filerTMP <- read.csv(paste0(dfFiler[NROW(dfFiler)-i], "/",
+                                  list.files(dfFiler[NROW(dfFiler)-i], pattern = "audit")),
+                           stringsAsFactors = F)
+    }
+
+    filerBU <- rbind(filerBU, filerTMP)
+  }
+}

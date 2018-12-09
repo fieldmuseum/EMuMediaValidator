@@ -1,24 +1,24 @@
 # Run this script to retrieve & check multimedia audit logs
-# 2018-10-19
+# 2018-Dec-09
 # FMNH-IT
 
 # Use 'Rscript mmValidate.R' to run this from a bash shell.
 
-# # getAudits <- readline("Do you need to get logs from server? Y/N")
 
+library("ssh")
+library("tidyverse")
 library("mailR")
+
 
 print(paste("Current working dir: ", getwd()))
 
 source("005checkEnv.R", verbose = F)
 
-source("008copyLogs.R", verbose = T)
+source("008copyLogs.R", verbose = T) # requires ssh
 
 source("010openLogs.R", verbose = T)
 
-if (!file.exists(paste0("auditErrorlog_", filerDate, ".txt"))) {
-  source("020compare.R", verbose = T)
-}
+source("020compare.R", verbose = T) # requires tidyverse
 
 source("025notify.R", verbose = T)  # requires mailR
 
