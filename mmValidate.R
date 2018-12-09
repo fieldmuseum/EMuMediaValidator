@@ -6,6 +6,8 @@
 
 # # getAudits <- readline("Do you need to get logs from server? Y/N")
 
+library("mailR")
+
 print(paste("Current working dir: ", getwd()))
 
 source("005checkEnv.R", verbose = F)
@@ -17,6 +19,8 @@ source("010openLogs.R", verbose = T)
 if (!file.exists(paste0("auditErrorlog_", filerDate, ".txt"))) {
   source("020compare.R", verbose = T)
 }
+
+source("025notify.R", verbose = T)  # requires mailR
 
 source("030cleanup.R", verbose = T)
 
