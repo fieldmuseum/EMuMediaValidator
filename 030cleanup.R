@@ -1,6 +1,6 @@
 # cleanup files 
 
-if (!file.exists(paste0("auditErrorlog_", filerDate))) {
+if (!file.exists(paste0("auditErrorlog_", filerDate, ".txt"))) {
   if (NROW(compareLogs)>0) {
     if (!dir.exists(paste0("checkLogs_", filerDate))) {
       dir.create(paste0("checkLogs_", filerDate))

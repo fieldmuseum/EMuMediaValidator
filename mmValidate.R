@@ -14,7 +14,7 @@ source("008copyLogs.R", verbose = T)
 
 source("010openLogs.R", verbose = T)
 
-if (!file.exists(paste0("auditErrorlog_", filerDate))) {
+if (!file.exists(paste0("auditErrorlog_", filerDate, ".txt"))) {
   source("020compare.R", verbose = T)
 }
 
