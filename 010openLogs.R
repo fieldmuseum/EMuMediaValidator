@@ -73,9 +73,10 @@ if (!dir.exists(paste0(origdir, locFiler, filerDate))) {
 # On Mondays, get Friday & Saturday logs, too
 if (format(max(timeEMu$ctime), "%a") == "Mon") {
   for (i in 1:2) {
-    if (!dir.exists(paste0(origdir, locFiler, (as.numeric(filerDate) - i) ))) {
+    filerDateMon <- gsub("-","",(Sys.Date()-(1+i)))
+    if (!dir.exists(paste0(origdir, locFiler, (as.numeric(filerDateMon)) ))) {
       
-      print(paste("no filer audit log for", (filerDate - i)))
+      print(paste("no filer audit log for", (filerDateMon)))
       
       filerTMP <- data.frame("timestamp.UTC." = character(),        
                              "category" =  character(),

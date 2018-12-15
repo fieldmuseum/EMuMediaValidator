@@ -1,6 +1,6 @@
 # Setup .Renviron 
 #   - follow https://csgillespie.github.io/efficientR/3-3-r-startup.html#r-startup
-
+# NOTE: Make sure to add .Renviron to .gitignore
 
 proj_renviron = path.expand(file.path(getwd(), ".Renviron"))
 if(!file.exists(proj_renviron)) { # check to see if the file already exists
@@ -28,7 +28,3 @@ if(!file.exists(proj_renviron)) { # check to see if the file already exists
   }
 
 
-# load env variables
-serverID <- Sys.getenv("SERVER_ID")
-serverIP <- Sys.getenv("SERVER_IP")
-serverPW <- Sys.getenv("SERVER_PW")
