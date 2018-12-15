@@ -74,7 +74,7 @@ if (!dir.exists(paste0(origdir, locFiler, filerDate))) {
 if (format(max(timeEMu$ctime), "%a") == "Mon") {
   for (i in 1:2) {
     filerDateMon <- gsub("-","",(Sys.Date()-(1+i)))
-    if (!dir.exists(paste0(origdir, locFiler, (as.numeric(filerDateMon)) ))) {
+    if (!dir.exists(paste0(origdir, locFiler, filerDateMon))) {
       
       print(paste("no filer audit log for", (filerDateMon)))
       

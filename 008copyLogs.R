@@ -65,10 +65,10 @@ scp_download(session,
 if (format(Sys.Date(), "%a") == "Mon") {
   for (i in 2:3) {
 
-    filerDate <- gsub("-","",(Sys.Date()-i))
+    filerDateMon <- gsub("-","",(Sys.Date()-i))
     scp_download(session,
                  paste0(pathFiler,
-                        filerDate),
+                        filerDateMon),
                  to = paste0(origdir,locFiler))
   }
 
