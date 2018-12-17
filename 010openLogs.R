@@ -73,7 +73,7 @@ if (!dir.exists(paste0(origdir, locFiler, filerDate))) {
 # On Mondays, get Friday & Saturday logs, too
 if (format(max(timeEMu$ctime), "%a") == "Mon") {
   for (i in 1:2) {
-    filerDateMon <- gsub("-","",(Sys.Date()-(1+i)))
+    filerDateMon <- gsub("-","",(Sys.Date() - (1 + i)))
     if (!dir.exists(paste0(origdir, locFiler, filerDateMon))) {
       
       print(paste("no filer audit log for", (filerDateMon)))
@@ -95,8 +95,9 @@ if (format(max(timeEMu$ctime), "%a") == "Mon") {
       
     } else {
       
-      filerTMP <- read.csv(paste0(dfFiler[NROW(dfFiler)-i], "/",
-                                  list.files(dfFiler[NROW(dfFiler)-i], pattern = "audit")),
+      locFilerMon <- paste0(origdir, locFiler, filerDateMon, sep = "/")
+      filerTMP <- read.csv(paste0(locFilerMon, "/",
+                                  list.files(locFilerMon, pattern = "audit")),
                            stringsAsFactors = F)
     }
 
