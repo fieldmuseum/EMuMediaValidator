@@ -8,7 +8,7 @@
 sender <- Sys.getenv("SENDER")
 recipients <- c(Sys.getenv("RECIP1"), Sys.getenv("RECIP2")) # Sys.getenv("RECIPTEST")
 
-if (Sys.Date() == "2018-12-25") {
+if (Sys.Date() == "2019-12-25") {
   send.mail(from = "yule-emu@fieldmuseum.org",
             to = recipients,
             subject = paste("EMu/Filer Validation results for Christmas"),
@@ -40,7 +40,7 @@ if (Sys.Date() == "2018-12-25") {
     send.mail(from = sender,
               to = recipients,
               subject = paste("EMu/Filer Validation results for", filerDate),
-              body = " Filer Recap \n If any errors, a 2nd 'checkMissing' log will be attached.",
+              body = " Filer Recap \n If any errors, a 2nd 'checkMissing' log will be attached. \n If any MD5 mismatches, an 'md5nomatch' csv will also be attached.",
               encoding = "utf-8",
               smtp = list(host.name = "aspmx.l.google.com", port = 25), 
                           # user.name = Sys.getenv("SENDER"),            
@@ -48,20 +48,30 @@ if (Sys.Date() == "2018-12-25") {
               authenticate = FALSE,
               send = TRUE,
               attach.files = c("./output/FilerRecap.csv", 
-                               if (file.exists(paste0("./output/checkMissingFiles_",
+                               
+                               if (file.exists(paste0(Sys.getenv("OUT_DIR"), "checkMissingFiles_",
                                                       format(max(timeEMu$ctime), "%Y%m%d_%a"),
                                                       ".csv"))) {
                                  paste0("./output/checkMissingFiles_",
                                         format(max(timeEMu$ctime), "%Y%m%d_%a"),
                                         ".csv")
+                               },
+                               
+                               if (file.exists(paste0(Sys.getenv("OUT_DIR"), "md5nomatch.csv"))) {
+                                 paste0(Sys.getenv("OUT_DIR"), "md5nomatch.csv")
                                }),
+              
               file.descriptions = c("Description for filer recap", 
-                                    if (file.exists(paste0("./output/checkMissingFiles_",
+                                    if (file.exists(paste0(Sys.getenv("OUT_DIR"),"checkMissingFiles_",
                                                             format(max(timeEMu$ctime), "%Y%m%d_%a"),
                                                             ".csv"))) {
                                       "Description for error log"
                                       
-                                      }), # optional parameter
+                                      },
+                                    
+                                    if (file.exists(paste0(Sys.getenv("OUT_DIR"), "md5nomatch.csv"))) {
+                                      "Description for non-matching EMu MD5sums"
+                                    }), # optional parameter
               debug = TRUE)
   
 }

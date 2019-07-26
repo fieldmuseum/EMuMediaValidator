@@ -8,6 +8,8 @@
 library("ssh")
 library("tidyverse")
 library("mailR")
+# library("digest")
+library("stringr")
 
 
 print(paste("Current working dir: ", getwd()))
@@ -17,6 +19,8 @@ source("005checkEnv.R", verbose = F)
 source("008copyLogs.R", verbose = T) # requires ssh
 
 source("010openLogs.R", verbose = T)
+
+source("013checkMD5.R", verbose = T) # requires stringr, tidyr; optional: digest
 
 source("020compare.R", verbose = T) # requires tidyverse
 

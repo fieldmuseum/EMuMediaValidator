@@ -14,6 +14,8 @@ if(!file.exists(proj_renviron)) { # check to see if the file already exists
                "FILER_DIR = 'path/to/filer/audit/directory/'",
                "EMU_DIR = 'path/to/emu/audit/directory/'",
                "OUT_DIR = 'output/'",
+               "MEDIA_DIR = '/path/to/media-share'",
+               "MEDIA_SUBDIR = '/media-subdirectory/'",
                "FILER_LOC = '/filerloc/'",
                "EMU_LOC = '/emuloc/'",
                "SENDER = 'youremail@address.com'",

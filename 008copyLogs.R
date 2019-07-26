@@ -16,14 +16,18 @@ locFiler <- Sys.getenv("FILER_LOC")
 # pathEMu <- Sys.getenv("EMU_DIR_BOO") # "data/eaudit/"
 # pathFiler <- Sys.getenv("FILER_DIR_BOO") # "data/filer/"
 
+# # Uncomment this if testing locally
+# pathEMu <- Sys.getenv("EMU_LOC")
+# pathFiler <- Sys.getenv("FILER_LOC")
+
 
 # Create local directories for audit logs
-if (!dir.exists(paste0(origdir, locEMu))) {
-  dir.create(paste(locEMu))
+if (dir.exists(paste0(origdir, locEMu)) == FALSE) {
+  dir.create(paste0(origdir, locEMu))
 }
 
-if (!dir.exists(paste0(origdir, locFiler))) {
-  dir.create(paste(locFiler))
+if (dir.exists(paste0(origdir, locFiler)) == FALSE) {
+  dir.create(paste0(origdir, locFiler))
 }
 
 
@@ -49,14 +53,14 @@ scp_download(session,
 # Get most recent Filer audit log with corresponding EMu log
 ## NOTE:
 ##  Filer logs run continuously & close out at end of the day
-##    - On Mon, get the Friday & Saturday filer logs
-##    - On Tue-Fri, get the previous day's logs
+##    - On Mon, get the Friday & Saturday filer logs  [update: "get Fri log"]
+##    - On Tue-Fri, get the previous day's logs [update: Tues = get Sat/Sun/Mon; W-F = prev day]
 ##  Note:  No log is generated if there are no file additions/edits/deletions
 
 # # filerDF <- list.dirs("data/", pattern = "audit", full.names = T)
 # # 
   
-filerDate <- gsub("-","",(Sys.Date()-1))
+filerDate <- gsub("-","",(Sys.Date() - 1))
 scp_download(session, 
              paste0(pathFiler, 
                     filerDate),
@@ -65,7 +69,7 @@ scp_download(session,
 if (format(Sys.Date(), "%a") == "Mon") {
   for (i in 2:3) {
 
-    filerDateMon <- gsub("-","",(Sys.Date()-i))
+    filerDateMon <- gsub("-", "", (Sys.Date() - i))
     scp_download(session,
                  paste0(pathFiler,
                         filerDateMon),
