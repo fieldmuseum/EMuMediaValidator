@@ -52,7 +52,7 @@ if (Sys.Date() == "2019-12-25") {
                                if (file.exists(paste0(Sys.getenv("OUT_DIR"), "checkMissingFiles_",
                                                       format(max(timeEMu$ctime), "%Y%m%d_%a"),
                                                       ".csv"))) {
-                                 paste0("./output/checkMissingFiles_",
+                                 paste0(Sys.getenv("OUT_DIR"), "checkMissingFiles_",
                                         format(max(timeEMu$ctime), "%Y%m%d_%a"),
                                         ".csv")
                                },

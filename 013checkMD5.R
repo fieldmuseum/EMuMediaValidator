@@ -12,7 +12,7 @@ emu2md5 <- unique(emu2[grepl("^ChaMd5Sum|^SupMD5Checksum_tab|^Multimedia|^Supple
                              emu2$AudNewValue) > 0,
                        c("eaudit_key", "AudNewValue")])
 
-# Can't trust that AudColumnName & AudNewValue match in each row
+# Can't trust original AudColumnName & AudNewValue match in each row
 emu2md5 <- separate(emu2md5, AudNewValue, 
                     into = c("AudColumnName", "AudNewValue"),
                     sep = ": ")
@@ -27,20 +27,24 @@ emu2md5 <- separate(emu2md5, AudNewValue,
 #                    "SupMD5Checksum_tab: <table><tuple><atom>1cc9ff23b1352cb69de255963c6dbd38</atom></tuple><tuple><atom>1f44d7cbc9d88adc81dcfb392c1beebf</atom></tuple></table>"))
 # emu2md5$eaudit_key <- as.integer(emu2md5$eaudit_key)
 
-
-emu2md5$AudNewValue <- gsub("^ChaMd5Sum: |^SupMD5Checksum_tab: |^Multimedia: |^Supplementary_tab: ", "", 
-                            emu2md5$AudNewValue)
-
 # clean emu md5 audit data
 emu2md5$AudNewValue <- gsub("</atom></tuple><tuple><atom>", "|", emu2md5$AudNewValue)
 emu2md5$AudNewValue <- gsub("<table>|<tuple>|<atom>|</atom>|</tuple>|</table>", "", emu2md5$AudNewValue)
 
-# split/gather Supp media files
-# 1 - get max number of Supp in a record
+
+# Count # supp here to setup keys
 emu2md5$supp <- str_count(emu2md5$AudNewValue, "\\|") + 1
+emu2md5$supp[grepl("^Sup", emu2md5$AudColumnName)<1] <- 0
+
+
+# split/gather Supp media files
+emu2md5$AudNewValue <- gsub("^ChaMd5Sum: |^SupMD5Checksum_tab: |^Multimedia: |^Supplementary_tab: ", "", 
+                            emu2md5$AudNewValue)
+
 emu2md5 <- separate(emu2md5, AudNewValue, 
                     into = paste0("EMuValue_", 1:(max(emu2md5$supp))),
                     sep = "\\|")
+
 
 # Form keys for corresponding filename-MD5 pairs
 emu2md5$eaudit_key <- paste0(emu2md5$eaudit_key, "_", emu2md5$supp)
@@ -171,6 +175,7 @@ md5check[is.na(md5check)] <- ""
 # NEED TO pre-set dataframe w/ each column's data type?
 
 md5nomatch <- md5check[!(md5check$EMu_MD5 == md5check$Filer_MD5) 
+                       & is.na(md5check$EMu_MD5)==F
                        & grepl("\\.thumb.jpg$", md5check$path.from) < 1,]
 
 if (NROW(md5nomatch) > 0) {

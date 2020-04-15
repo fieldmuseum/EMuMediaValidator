@@ -5,6 +5,8 @@
 .Rprofile
 .Renviron
 
+testEmail.R
+
 *.txt
 *.zip
 *.csv
