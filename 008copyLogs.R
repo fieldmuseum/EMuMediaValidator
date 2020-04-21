@@ -43,12 +43,19 @@ session <- ssh_connect(host = paste0(serverID, "@", serverIP),
 ##    - Tue-Fri EMu audit logs represent the previous day's activity
 
 
-scp_download(session, 
-             paste0(pathEMu,
-                    '"$(ls ', pathEMu,
-                    ' -1t --color=never | head -1)"'),
-             to = paste0(origdir,locEMu))
+get_latest_raw <- ssh_exec_internal(
+  session = session, 
+  command = paste("cd", pathEMu, "&&",
+                  "ls -td -- */ | head -n 1"))
 
+get_latest <- gsub("\n", "", rawToChar(get_latest_raw$stdout))
+
+scp_download(session,
+             # pathEMu
+             paste0(pathEMu, get_latest),
+             # '"$(ls ', pathEMu,
+             # ' -1t --color=never | head -1)"'),
+             to = paste0(origdir,locEMu))
 
 # Get most recent Filer audit log with corresponding EMu log
 ## NOTE:

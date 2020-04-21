@@ -72,37 +72,39 @@ if (!dir.exists(paste0(origdir, locFiler, filerDate))) {
 
 # On Mondays, get Friday logs, too.
 # (May need to fix this -- On Mon, need Fri filer log; on Tues, need Sat & Sun Filer logs)
-if (format(max(timeEMu$ctime), "%a") == "Mon") {
-  for (i in 2:3) {
-    filerDateMon <- gsub("-","",(Sys.Date() - i))
-    if (!dir.exists(paste0(origdir, locFiler, filerDateMon))) {
-      
-      print(paste("no filer audit log for", (filerDateMon)))
-      
-      filerTMP <- data.frame("timestamp.UTC." = character(),        
-                             "category" =  character(),
-                             "event.type" =  character(),
-                             "path.from" =  character(),
-                             "new.path.to" = logical(),
-                             "user" = integer(),
-                             "group" = integer(),
-                             "sid" = integer(),
-                             "share.export.name" = logical(),
-                             "volume.type" =  character(),
-                             "client.IP" = logical(),
-                             "snapshot.timestamp.UTC." = logical(),
-                             "shared.link" = logical(),
+if (!is.null(timeEMu$ctime)) {
+  if (format(max(timeEMu$ctime), "%a") == "Mon") {
+    for (i in 2:3) {
+      filerDateMon <- gsub("-","",(Sys.Date() - i))
+      if (dir.exists(paste0(origdir, locFiler, filerDateMon))==FALSE) {
+        
+        print(paste("no filer audit log for", (filerDateMon)))
+        
+        filerTMP <- data.frame("timestamp.UTC." = character(),        
+                               "category" =  character(),
+                               "event.type" =  character(),
+                               "path.from" =  character(),
+                               "new.path.to" = logical(),
+                               "user" = integer(),
+                               "group" = integer(),
+                               "sid" = integer(),
+                               "share.export.name" = logical(),
+                               "volume.type" =  character(),
+                               "client.IP" = logical(),
+                               "snapshot.timestamp.UTC." = logical(),
+                               "shared.link" = logical(),
+                               stringsAsFactors = F)
+        
+      } else {
+  
+        locFilerMon <- paste0(origdir, locFiler, filerDateMon, sep = "/")
+        filerTMP <- read.csv(paste0(locFilerMon, "/",
+                                    list.files(locFilerMon, pattern = "audit")),
                              stringsAsFactors = F)
+      }
+  
+      filerBU <- rbind(filerBU, filerTMP)
       
-    } else {
-
-      locFilerMon <- paste0(origdir, locFiler, filerDateMon, sep = "/")
-      filerTMP <- read.csv(paste0(locFilerMon, "/",
-                                  list.files(locFilerMon, pattern = "audit")),
-                           stringsAsFactors = F)
     }
-
-    filerBU <- rbind(filerBU, filerTMP)
-    
   }
 }
