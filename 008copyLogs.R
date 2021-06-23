@@ -68,6 +68,11 @@ scp_download(session,
 # # 
   
 filerDate <- gsub("-","",(Sys.Date() - 1))
+
+ssh_exec_internal(
+  session = session, 
+  command = "sudo su root")
+
 scp_download(session, 
              paste0(pathFiler, 
                     filerDate),
