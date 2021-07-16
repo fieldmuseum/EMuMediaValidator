@@ -14,13 +14,13 @@
 ##    - Mon EMu audit log represents Fri+Sat+Sun activity <-- TESTING THIS
 
 # timeEMu <- file.info(list.files(paste(pathEMu), full.names = T))
-timeEMu <- file.info(list.files(paste0(origdir, locEMu), full.names = T))
+timeEMu <- file.info(list.files(locEMu, full.names = T))
 
 # dfEMu <- list.dirs(paste(pathEMu), full.names = T)
-dfEMu <- list.dirs(paste0(origdir, locEMu), full.names = T)
+dfEMu <- list.dirs(locEMu, full.names = T)
 
 
-if (NROW(list.dirs(paste0(origdir, locEMu))) < 2) {
+if (NROW(list.dirs(locEMu)) < 2) {
   
   print(paste("no EMu audit log for", filerDate))
   write.table(print(paste("No EMu log for", filerDate)), 

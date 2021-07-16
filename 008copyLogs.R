@@ -4,7 +4,8 @@
 serverID <- Sys.getenv("SERVER_ID")
 serverIP <- Sys.getenv("SERVER_IP")
 serverPW <- Sys.getenv("SERVER_PW")
-pathEMu <- Sys.getenv("EMU_DIR")
+serverPW2 <- Sys.getenv("SERVER_PW2")
+# pathEMu <- Sys.getenv("EMU_DIR")
 pathFiler <- Sys.getenv("FILER_DIR")
 
 # load local enviro variables
@@ -22,9 +23,9 @@ locFiler <- Sys.getenv("FILER_LOC")
 
 
 # Create local directories for audit logs
-if (dir.exists(paste0(origdir, locEMu)) == FALSE) {
-  dir.create(paste0(origdir, locEMu))
-}
+# if (dir.exists(paste0(origdir, locEMu)) == FALSE) {
+#   dir.create(paste0(origdir, locEMu))
+# }
 
 if (dir.exists(paste0(origdir, locFiler)) == FALSE) {
   dir.create(paste0(origdir, locFiler))
@@ -34,6 +35,7 @@ if (dir.exists(paste0(origdir, locFiler)) == FALSE) {
 # get data from server if running on the server
 
 session <- ssh_connect(host = paste0(serverID, "@", serverIP),
+                       passwd = serverPW,
                        verbose = 2)
 
 ## Get most recent EMu audit log
@@ -43,19 +45,19 @@ session <- ssh_connect(host = paste0(serverID, "@", serverIP),
 ##    - Tue-Fri EMu audit logs represent the previous day's activity
 
 
-get_latest_raw <- ssh_exec_internal(
-  session = session, 
-  command = paste("cd", pathEMu, "&&",
-                  "ls -td -- */ | head -n 1"))
-
-get_latest <- gsub("\n", "", rawToChar(get_latest_raw$stdout))
-
-scp_download(session,
-             # pathEMu
-             paste0(pathEMu, get_latest),
-             # '"$(ls ', pathEMu,
-             # ' -1t --color=never | head -1)"'),
-             to = paste0(origdir,locEMu))
+# get_latest_raw <- ssh_exec_internal(
+#   session = session, 
+#   command = paste("cd", pathEMu, "&&",
+#                   "ls -td -- */ | head -n 1"))
+# 
+# get_latest <- gsub("\n", "", rawToChar(get_latest_raw$stdout))
+# 
+# scp_download(session,
+#              # pathEMu
+#              paste0(pathEMu, get_latest),
+#              # '"$(ls ', pathEMu,
+#              # ' -1t --color=never | head -1)"'),
+#              to = paste0(origdir,locEMu))
 
 # Get most recent Filer audit log with corresponding EMu log
 ## NOTE:
@@ -69,9 +71,12 @@ scp_download(session,
   
 filerDate <- gsub("-","",(Sys.Date() - 1))
 
-ssh_exec_internal(
-  session = session, 
-  command = "sudo su root")
+command <- paste0('echo "" | sudo -s -S su root')
+
+# ssh_exec_internal(
+#   session = session,
+#   command = paste0('echo "', serverPW2,
+#                    '\n" | sudo -S su root'))
 
 scp_download(session, 
              paste0(pathFiler, 
