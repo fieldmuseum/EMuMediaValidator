@@ -1,17 +1,19 @@
 # Retrieve the latest logs by SSH-ing to server
 
 # load server env variables
-serverID <- Sys.getenv("SERVER_ID")
-serverIP <- Sys.getenv("SERVER_IP")
-serverPW <- Sys.getenv("SERVER_PW")
-serverPW2 <- Sys.getenv("SERVER_PW2")
-# pathEMu <- Sys.getenv("EMU_DIR")
-pathFiler <- Sys.getenv("FILER_DIR")
+# serverID <- Sys.getenv("SERVER_ID")
+# serverIP <- Sys.getenv("SERVER_IP")
+# serverPW <- Sys.getenv("SERVER_PW")
+# serverPW2 <- Sys.getenv("SERVER_PW2")
+# # pathEMu <- Sys.getenv("EMU_DIR")
+# pathFiler <- Sys.getenv("FILER_DIR")
 
 # load local enviro variables
 origdir <- getwd()
 locEMu <- Sys.getenv("EMU_LOC")
 locFiler <- Sys.getenv("FILER_LOC")
+
+filerDate <- gsub("-","",(Sys.Date() - 1))
 
 # # Uncomment this if testing on test-server
 # pathEMu <- Sys.getenv("EMU_DIR_BOO") # "data/eaudit/"
@@ -27,16 +29,16 @@ locFiler <- Sys.getenv("FILER_LOC")
 #   dir.create(paste0(origdir, locEMu))
 # }
 
-if (dir.exists(paste0(origdir, locFiler)) == FALSE) {
-  dir.create(paste0(origdir, locFiler))
-}
+# if (dir.exists(paste0(origdir, locFiler)) == FALSE) {
+#   dir.create(paste0(origdir, locFiler))
+# }
 
 
 # get data from server if running on the server
 
-session <- ssh_connect(host = paste0(serverID, "@", serverIP),
-                       passwd = serverPW,
-                       verbose = 2)
+# session <- ssh_connect(host = paste0(serverID, "@", serverIP),
+#                        passwd = serverPW,
+#                        verbose = 2)
 
 ## Get most recent EMu audit log
 ##  NOTE:
@@ -71,35 +73,36 @@ session <- ssh_connect(host = paste0(serverID, "@", serverIP),
   
 filerDate <- gsub("-","",(Sys.Date() - 1))
 
-command <- paste0('echo "" | sudo -s -S su root')
 
-# ssh_exec_internal(
-#   session = session,
-#   command = paste0('echo "', serverPW2,
-#                    '\n" | sudo -S su root'))
+# command <- paste0('echo "" | sudo -s -S su root')
+# 
+# # ssh_exec_internal(
+# #   session = session,
+# #   command = paste0('echo "', serverPW2,
+# #                    '\n" | sudo -S su root'))
+# 
+# scp_download(session, 
+#              paste0(pathFiler, 
+#                     filerDate),
+#              to = paste0(origdir,locFiler))
 
-scp_download(session, 
-             paste0(pathFiler, 
-                    filerDate),
-             to = paste0(origdir,locFiler))
+# if (format(Sys.Date(), "%a") == "Mon") {
+#   for (i in 2:3) {
+# 
+#     filerDateMon <- gsub("-", "", (Sys.Date() - i))
+#     # scp_download(session,
+#     #              paste0(pathFiler,
+#     #                     filerDateMon),
+#     #              to = paste0(origdir,locFiler))
+#   }
+# 
+# }
 
-if (format(Sys.Date(), "%a") == "Mon") {
-  for (i in 2:3) {
-
-    filerDateMon <- gsub("-", "", (Sys.Date() - i))
-    scp_download(session,
-                 paste0(pathFiler,
-                        filerDateMon),
-                 to = paste0(origdir,locFiler))
-  }
-
-}
-
-Sys.sleep(2)
-
-ssh_disconnect(session)
-
-Sys.sleep(2)
+# Sys.sleep(2)
+# 
+# ssh_disconnect(session)
+# 
+# Sys.sleep(2)
 
 # # output of this script should be:
 # dataEMu <- "RENVIRON-VAR-path-to/latest/EMuLog.csv/xml"
